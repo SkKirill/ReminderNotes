@@ -1,8 +1,11 @@
-package com.example.remindernotes
+package com.example.remindernotes.data.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.remindernotes.Logger
+import com.example.remindernotes.data.models.Note
+import com.example.remindernotes.repositories.NoteRepository
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 

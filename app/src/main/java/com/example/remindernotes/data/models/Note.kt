@@ -1,4 +1,4 @@
-package com.example.remindernotes
+package com.example.remindernotes.data.models
 
 import java.util.UUID
 

@@ -1,11 +1,13 @@
-package com.example.remindernotes
+package com.example.remindernotes.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.remindernotes.Logger
 import com.example.remindernotes.databinding.ItemNoteBinding
+import com.example.remindernotes.data.models.Note
 
 class NoteAdapter(
     private val onEdit: (Note) -> Unit,

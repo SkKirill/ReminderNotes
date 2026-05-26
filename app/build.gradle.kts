@@ -56,6 +56,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
 
     testImplementation(libs.junit)
 

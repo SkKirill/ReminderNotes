@@ -1,8 +1,9 @@
-package com.example.remindernotes
+package com.example.remindernotes.data.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.remindernotes.repositories.NoteRepository
 
 class NoteViewModelFactory(
     private val context: Context

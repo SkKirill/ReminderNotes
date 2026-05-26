@@ -1,15 +1,19 @@
-package com.example.remindernotes
+package com.example.remindernotes.repositories
 
 import android.content.Context
+import com.example.remindernotes.Logger
+import com.example.remindernotes.data.models.Note
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
+import kotlin.collections.toMutableList
 
 class NoteRepository(private val context: Context) {
 
     private val gson = Gson()
     private val fileName = "notes.json"
 
-    private fun getFile() = java.io.File(context.filesDir, fileName)
+    private fun getFile() = File(context.filesDir, fileName)
 
     private fun saveToFile(notes: List<Note>) {
         try {

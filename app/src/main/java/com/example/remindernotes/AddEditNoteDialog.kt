@@ -3,6 +3,7 @@ package com.example.remindernotes
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import com.example.remindernotes.databinding.DialogAddEditNoteBinding
+import com.example.remindernotes.data.models.Note
 
 object AddEditNoteDialog {
 
