@@ -12,25 +12,27 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _notes = MutableLiveData<List<Note>>(emptyList())
     val notes: LiveData<List<Note>> = _notes
 
-    fun loadNotes() {
+    fun load() {
         _notes.value = repository.getAll()
     }
 
-    fun addNote(title: String, text: String) {
-        Logger.d("NoteViewModel", "Adding note: title=$title")
-        repository.add(title, text)
-        loadNotes()
+    fun getById(id: String): Note? = repository.getById(id)
+
+    fun add(title: String, text: String, isImportant: Boolean) {
+        Logger.d("NoteViewModel", "add: title=$title, important=$isImportant")
+        repository.add(title, text, isImportant)
+        load()
     }
 
-    fun updateNote(note: Note) {
-        Logger.d("NoteViewModel", "Updating note: id=${note.id}, title=${note.title}")
+    fun update(note: Note) {
+        Logger.d("NoteViewModel", "update: id=${note.id}")
         repository.update(note)
-        loadNotes()
+        load()
     }
 
-    fun deleteNote(note: Note) {
-        Logger.d("NoteViewModel", "Deleting note: id=${note.id}, title=${note.title}")
+    fun delete(note: Note) {
+        Logger.d("NoteViewModel", "delete: id=${note.id}")
         repository.delete(note)
-        loadNotes()
+        load()
     }
 }

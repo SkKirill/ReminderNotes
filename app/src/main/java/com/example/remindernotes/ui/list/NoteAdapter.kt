@@ -10,7 +10,7 @@ import com.example.remindernotes.databinding.ItemNoteBinding
 import com.example.remindernotes.data.models.Note
 
 class NoteAdapter(
-    private val onEdit: (Note) -> Unit,
+    private val onClick: (Note) -> Unit,
     private val onDelete: (Note) -> Unit
 ) : ListAdapter<Note, NoteAdapter.NoteViewHolder>(NoteDiffCallback()) {
 
@@ -21,30 +21,25 @@ class NoteAdapter(
         fun bind(note: Note) {
             binding.tvTitle.text = note.title
             binding.tvText.text = note.text
-            binding.btnEdit.setOnClickListener {
-                Logger.d("NoteAdapter", "Edit clicked: id=${note.id}, title=${note.title}")
-                onEdit(note)
-            }
-            binding.btnDelete.setOnClickListener {
-                Logger.d("NoteAdapter", "Delete clicked: id=${note.id}, title=${note.title}")
-                onDelete(note)
-            }
+            binding.ivImportant.setImageResource(
+                if (note.isImportant) R.drawable.ic_star_filled
+                else R.drawable.ic_star_outline
+            )
+            binding.root.setOnClickListener { onClick(note) }
+            binding.btnDelete.setOnClickListener { onDelete(note) }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val binding = ItemNoteBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        NoteViewHolder(
+            ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
-        return NoteViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }
 
 class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
-    override fun areItemsTheSame(oldItem: Note, newItem: Note) = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Note, newItem: Note) = oldItem == newItem
+    override fun areItemsTheSame(old: Note, new: Note) = old.id == new.id
+    override fun areContentsTheSame(old: Note, new: Note) = old == new
 }

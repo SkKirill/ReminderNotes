@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/noteListFragment">
+
+    <fragment
+        android:id="@+id/noteListFragment"
+        android:name="com.example.remindernotes.ui.list.NoteListFragment"
+        android:label="Заметки"
+        tools:layout="@layout/fragment_note_list">
+
+        <action
+            android:id="@+id/action_noteList_to_noteDetail"
+            app:destination="@id/noteDetailFragment" />
+
+        <action
+            android:id="@+id/action_noteList_to_noteEdit"
+            app:destination="@id/noteEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/noteDetailFragment"
+        android:name="com.example.remindernotes.ui.detail.NoteDetailFragment"
+        android:label="Детали заметки"
+        tools:layout="@layout/fragment_note_detail">
+
+        <argument
+            android:name="noteId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_noteDetail_to_noteEdit"
+            app:destination="@id/noteEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/noteEditFragment"
+        android:name="com.example.remindernotes.ui.edit.NoteEditFragment"
+        android:label="Редактирование"
+        tools:layout="@layout/fragment_note_edit">
+
+        <argument
+            android:name="noteId"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+</navigation>

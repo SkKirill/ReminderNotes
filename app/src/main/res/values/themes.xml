@@ -1,9 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.ReminderNotes" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<resources>
+    <style name="Theme.ReminderNotes" parent="Theme.Material3.DayNight">
+        <!-- Цветовая схема генерируется на material-foundation.com -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
     </style>
-
-    <style name="Theme.ReminderNotes" parent="Base.Theme.ReminderNotes" />
 </resources>
