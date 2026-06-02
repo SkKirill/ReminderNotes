@@ -48,7 +48,6 @@ object Logger {
             "ERROR"   -> Log.e(tag, message)
         }
 
-        // Write to file
         try {
             FileWriter(logFile, true).use { writer ->
                 writer.appendLine(line)
