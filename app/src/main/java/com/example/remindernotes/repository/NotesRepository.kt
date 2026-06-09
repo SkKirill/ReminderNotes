@@ -3,6 +3,7 @@ package com.example.remindernotes.repository
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.remindernotes.models.Note
+import com.example.remindernotes.models.NoteResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -51,5 +52,31 @@ class NotesRepository(context: Context) {
 
     fun getNoteById(noteId: String): Note? {
         return getAllNotes().find { it.id.toString() == noteId }
+    }
+
+    fun mergeWithServerNotes(serverNotes: List<NoteResponse>): List<Note> {
+        val localNotes = getAllNotes()
+
+        val mergedServerNotes = serverNotes.map { serverNote ->
+            val existing = localNotes.find { it.id == serverNote.id }
+            Note(
+                id = serverNote.id,
+                title = serverNote.title,
+                content = serverNote.content,
+                isImportant = existing?.isImportant ?: false,
+                isDone = existing?.isDone ?: false,
+            )
+        }
+
+        val localOnlyNotes = localNotes.filter { local ->
+            serverNotes.none { server -> server.id == local.id }
+        }
+
+        val result = (mergedServerNotes + localOnlyNotes)
+            .sortedByDescending { it.title }
+            .sortedByDescending { it.isImportant }
+
+        saveAllNotes(result)
+        return result
     }
 }
