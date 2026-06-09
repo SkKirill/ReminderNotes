@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">ReminderNotes</string>
+    <string name="app_name">Мои заметки</string>
+    <string name="note_title_hint">Заголовок</string>
+    <string name="note_content_hint">Текст заметки</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="snackbar_note_added">Заметка добавлена</string>
+    <string name="snackbar_note_deleted">Заметка удалена</string>
+    <string name="snackbar_note_saved">Изменения сохранены</string>
+    <string name="empty_notes">Нет заметок.\nНажмите + чтобы добавить.</string>
 </resources>

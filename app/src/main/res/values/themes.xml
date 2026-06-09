@@ -1,5 +1,8 @@
 <resources>
-    <style name="Theme.ReminderNotes" parent="Theme.Material3.DayNight">
-        <item name="android:statusBarColor">?attr/colorSurface</item>
+    <style name="Theme.ReminderNotes" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/background_color</item>
     </style>
 </resources>
