@@ -1,9 +1,3 @@
 <resources>
     <string name="app_name">ReminderNotes</string>
-    <string name="AddNoteHint">No notes.\nClick + to add.</string>
-    <string name="AddNote">Add a note</string>
-    <string name="NoteHeader">Header</string>
-    <string name="NoteText">Text</string>
-    <string name="NoteEdit">Edit</string>
-    <string name="NoteRemove">Remove</string>
 </resources>
