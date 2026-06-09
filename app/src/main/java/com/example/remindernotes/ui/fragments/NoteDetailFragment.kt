@@ -8,15 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.remindernotes.databinding.FragmentNoteDetailBinding
 import com.example.remindernotes.models.Note
-import com.example.remindernotes.repository.NotesRepository
+import com.example.remindernotes.data.repository.NotesRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+@AndroidEntryPoint
 class NoteDetailFragment : Fragment() {
 
     private var _binding: FragmentNoteDetailBinding? = null
