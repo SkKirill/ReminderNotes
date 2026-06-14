@@ -1,4 +1,4 @@
-package com.example.remindernotes.models
+package com.example.remindernotes.data.remote
 
 import com.google.gson.annotations.SerializedName
 import java.util.UUID

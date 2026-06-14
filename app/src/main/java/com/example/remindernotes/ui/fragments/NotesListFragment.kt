@@ -1,63 +1,69 @@
 package com.example.remindernotes.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.remindernotes.R
 import com.example.remindernotes.databinding.FragmentNotesListBinding
-import com.example.remindernotes.models.Note
-import com.example.remindernotes.models.RetrofitClient
-import com.example.remindernotes.repository.NotesRepository
 import com.example.remindernotes.services.NotesAdapter
+import com.example.remindernotes.ui.viewmodels.FilterType
+import com.example.remindernotes.ui.viewmodels.NotesViewModel
+import com.example.remindernotes.ui.viewmodels.SortType
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NotesListFragment : Fragment() {
 
     private var _binding: FragmentNotesListBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var repository: NotesRepository
+    private val viewModel: NotesViewModel by viewModels()
     private lateinit var adapter: NotesAdapter
-    private var notes = mutableListOf<Note>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNotesListBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        repository = NotesRepository(requireContext())
-
         setupRecyclerView()
         setupFab()
         setupSwipeRefresh()
-        loadNotes()
-        fetchNotesFromServer()
+        observeViewModel()
 
-        parentFragmentManager.setFragmentResultListener(
-            "note_result", viewLifecycleOwner
-        ) { _, bundle ->
-            when (bundle.getString("action")) {
-                "added" -> {
-                    loadNotes()
-                    Snackbar.make(binding.root, "Заметка добавлена", Snackbar.LENGTH_SHORT).show()
-                }
-                "saved" -> {
-                    loadNotes()
-                    Snackbar.make(binding.root, "Изменения сохранены", Snackbar.LENGTH_SHORT).show()
-                }
+        viewModel.refreshFromServer()
+
+        parentFragmentManager.setFragmentResultListener("note_result", viewLifecycleOwner) { _, bundle ->
+            val msg = when (bundle.getString("action")) {
+                "added" -> "Заметка добавлена"
+                "saved" -> "Изменения сохранены"
+                else -> null
+            }
+            msg?.let { Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show() }
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.notes.observe(viewLifecycleOwner) { notes ->
+            adapter.submitList(notes)
+            binding.tvEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
+            binding.recyclerView.visibility = if (notes.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.swipeRefreshLayout.isRefreshing = loading
+        }
+
+        viewModel.snackbarMessage.observe(viewLifecycleOwner) { msg ->
+            msg?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.snackbarShown()
             }
         }
     }
@@ -65,11 +71,16 @@ class NotesListFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = NotesAdapter(
             onNoteClick = { note ->
-                val bundle = Bundle().apply { putString("noteId", note.id.toString()) }
+                val bundle = Bundle().apply { putString("noteId", note.id) }
                 findNavController().navigate(R.id.noteDetailFragment, bundle)
             },
-            onDeleteClick = { note -> deleteNote(note) },
-            onImportantToggle = { note -> toggleImportant(note) }
+            onDeleteClick = { note ->
+                viewModel.deleteNote(note)
+                Snackbar.make(binding.root, "Заметка удалена", Snackbar.LENGTH_LONG)
+                    .setAction("Отмена") { viewModel.restoreNote(note) }
+                    .show()
+            },
+            onImportantToggle = { note -> viewModel.toggleImportant(note) }
         )
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
@@ -83,63 +94,23 @@ class NotesListFragment : Fragment() {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            fetchNotesFromServer()
+            viewModel.refreshFromServer()
         }
     }
 
-    private fun fetchNotesFromServer() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.swipeRefreshLayout.isRefreshing = true
-            try {
-                val response = RetrofitClient.api.getNotes()
-                if (response.isSuccessful) {
-                    val serverNotes = response.body()?.notes ?: emptyList()
-                    repository.mergeWithServerNotes(serverNotes)
-                    loadNotes()
-                } else {
-                    Snackbar.make(
-                        binding.root,
-                        "Ошибка сервера: ${response.code()}",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Exception) {
-                Snackbar.make(
-                    binding.root,
-                    "Нет соединения: ${e.message}",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            } finally {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_notes_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.filter_all -> { viewModel.setFilter(FilterType.ALL); true }
+            R.id.filter_important -> { viewModel.setFilter(FilterType.IMPORTANT); true }
+            R.id.filter_done -> { viewModel.setFilter(FilterType.DONE); true }
+            R.id.sort_date -> { viewModel.setSort(SortType.DATE); true }
+            R.id.sort_title -> { viewModel.setSort(SortType.TITLE); true }
+            else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun loadNotes() {
-        notes = repository.getAllNotes()
-        adapter.submitList(notes.toList())
-        updateEmptyState()
-    }
-
-    private fun deleteNote(note: Note) {
-        repository.deleteNote(note.id.toString())
-        loadNotes()
-        Snackbar.make(binding.root, "Заметка удалена", Snackbar.LENGTH_LONG)
-            .setAction("Отмена") {
-                repository.addNote(note)
-                loadNotes()
-            }
-            .show()
-    }
-
-    private fun toggleImportant(note: Note) {
-        repository.updateNote(note.copy(isImportant = !note.isImportant))
-        loadNotes()
-    }
-
-    private fun updateEmptyState() {
-        binding.tvEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
-        binding.recyclerView.visibility = if (notes.isEmpty()) View.GONE else View.VISIBLE
     }
 
     override fun onDestroyView() {

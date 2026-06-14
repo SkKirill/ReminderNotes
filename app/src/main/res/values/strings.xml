@@ -8,4 +8,5 @@
     <string name="snackbar_note_deleted">Заметка удалена</string>
     <string name="snackbar_note_saved">Изменения сохранены</string>
     <string name="empty_notes">Нет заметок.\nНажмите + чтобы добавить.</string>
+    <string name="reminder_time">Напоминание: %s</string>
 </resources>

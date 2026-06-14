@@ -1,18 +1,19 @@
 package com.example.remindernotes.services
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.remindernotes.data.local.NoteEntity
 import com.example.remindernotes.databinding.ItemNoteBinding
-import com.example.remindernotes.models.Note
 
 class NotesAdapter(
-    private val onNoteClick: (Note) -> Unit,
-    private val onDeleteClick: (Note) -> Unit,
-    private val onImportantToggle: (Note) -> Unit
-) : ListAdapter<Note, NotesAdapter.NoteViewHolder>(NoteDiffCallback()) {
+    private val onNoteClick: (NoteEntity) -> Unit,
+    private val onDeleteClick: (NoteEntity) -> Unit,
+    private val onImportantToggle: (NoteEntity) -> Unit
+) : ListAdapter<NoteEntity, NotesAdapter.NoteViewHolder>(NoteDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = ItemNoteBinding.inflate(
@@ -25,13 +26,10 @@ class NotesAdapter(
         holder.bind(getItem(position))
     }
 
-    /**
-     * Хранит ссылки на View элемента
-     */
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(note: Note) {
+        fun bind(note: NoteEntity) {
             binding.apply {
                 tvTitle.text = note.title
                 tvContent.text = note.content.ifEmpty { "Нет текста" }
@@ -44,8 +42,7 @@ class NotesAdapter(
                 )
 
                 tvDoneStatus.text = if (note.isDone) "✓ Выполнено" else ""
-                tvDoneStatus.visibility =
-                    if (note.isDone) android.view.View.VISIBLE else android.view.View.GONE
+                tvDoneStatus.visibility = if (note.isDone) View.VISIBLE else View.GONE
 
                 root.setOnClickListener { onNoteClick(note) }
                 ivDelete.setOnClickListener { onDeleteClick(note) }
@@ -54,8 +51,10 @@ class NotesAdapter(
         }
     }
 
-    class NoteDiffCallback : DiffUtil.ItemCallback<Note>() {
-        override fun areItemsTheSame(oldItem: Note, newItem: Note) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Note, newItem: Note) = oldItem == newItem
+    class NoteDiffCallback : DiffUtil.ItemCallback<NoteEntity>() {
+        override fun areItemsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
+            oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
+            oldItem == newItem
     }
 }
