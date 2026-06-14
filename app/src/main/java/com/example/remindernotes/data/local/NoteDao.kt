@@ -35,4 +35,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes ORDER BY createdAt DESC")
     fun getNotesSortedByDate(): LiveData<List<NoteEntity>>
+
+    @Query("SELECT * FROM notes")
+    fun getAllNotesSync(): List<NoteEntity>
 }

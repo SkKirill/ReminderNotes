@@ -32,7 +32,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Content input -->
+        <!-- Content input + voice button -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilContent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -40,6 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Текст заметки"
+            app:endIconMode="custom"
+            app:endIconDrawable="@android:drawable/ic_btn_speak_now"
+            app:endIconContentDescription="Голосовой ввод"
             app:layout_constraintTop_toBottomOf="@id/tilTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

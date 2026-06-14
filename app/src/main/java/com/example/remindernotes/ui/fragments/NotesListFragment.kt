@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.remindernotes.R
 import com.example.remindernotes.databinding.FragmentNotesListBinding
-import com.example.remindernotes.services.NotesAdapter
+import com.example.remindernotes.services.adapters.NotesAdapter
 import com.example.remindernotes.ui.viewmodels.FilterType
 import com.example.remindernotes.ui.viewmodels.NotesViewModel
 import com.example.remindernotes.ui.viewmodels.SortType

@@ -34,11 +34,36 @@ class MainActivity : AppCompatActivity() {
                 else -> "Notes"
             }
         }
+
+        // Открываем заметку, если запущены из уведомления
+        handleNotificationIntent(intent)
+    }
+
+    // Вызывается при повторном onNewIntent (launchMode="singleTop")
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        handleNotificationIntent(intent)
+    }
+
+    private fun handleNotificationIntent(intent: android.content.Intent?) {
+        val noteId = intent?.getStringExtra(EXTRA_OPEN_NOTE_ID) ?: return
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment ?: return
+
+        // Небольшая задержка, чтобы NavController успел инициализироваться
+        binding.root.post {
+            val bundle = Bundle().apply { putString("noteId", noteId) }
+            navHostFragment.navController.navigate(R.id.noteDetailFragment, bundle)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         return navHostFragment.navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    companion object {
+        const val EXTRA_OPEN_NOTE_ID = "extra_open_note_id"
     }
 }

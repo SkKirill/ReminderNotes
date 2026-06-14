@@ -1,4 +1,4 @@
-package com.example.remindernotes.di
+package com.example.remindernotes.services.di
 
 import android.content.Context
 import androidx.room.Room

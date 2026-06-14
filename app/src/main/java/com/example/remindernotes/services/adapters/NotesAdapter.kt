@@ -1,5 +1,6 @@
-package com.example.remindernotes.services
+package com.example.remindernotes.services.adapters
 
+import android.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +37,9 @@ class NotesAdapter(
 
                 ivImportant.setImageResource(
                     if (note.isImportant)
-                        android.R.drawable.btn_star_big_on
+                        R.drawable.btn_star_big_on
                     else
-                        android.R.drawable.btn_star_big_off
+                        R.drawable.btn_star_big_off
                 )
 
                 tvDoneStatus.text = if (note.isDone) "✓ Выполнено" else ""
