@@ -1,4 +1,4 @@
-package com.example.remindernotes.ui.viewmodel
+package com.example.remindernotes.ui.viewmodels
 
 import androidx.lifecycle.*
 import com.example.remindernotes.data.local.NoteEntity

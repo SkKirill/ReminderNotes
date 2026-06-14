@@ -29,10 +29,10 @@ class NotesRepository @Inject constructor(
             if (response.isSuccessful) {
                 val serverNotes = response.body()?.notes ?: emptyList()
                 serverNotes.forEach { serverNote ->
-                    val existing = dao.getNoteById(serverNote.id)
+                    val existing = dao.getNoteById(serverNote.id.toString())
                     dao.insertNote(
                         NoteEntity(
-                            id = serverNote.id,
+                            id = serverNote.id.toString(),
                             title = serverNote.title,
                             content = serverNote.content,
                             // сохраняем локальные статусы если заметка уже есть

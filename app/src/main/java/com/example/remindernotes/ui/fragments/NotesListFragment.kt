@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.remindernotes.R
 import com.example.remindernotes.databinding.FragmentNotesListBinding
 import com.example.remindernotes.services.NotesAdapter
-import com.example.remindernotes.ui.viewmodel.FilterType
-import com.example.remindernotes.ui.viewmodel.NotesViewModel
-import com.example.remindernotes.ui.viewmodel.SortType
+import com.example.remindernotes.ui.viewmodels.FilterType
+import com.example.remindernotes.ui.viewmodels.NotesViewModel
+import com.example.remindernotes.ui.viewmodels.SortType
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
